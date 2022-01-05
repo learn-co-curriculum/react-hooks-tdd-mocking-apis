@@ -323,12 +323,12 @@ logic in the server to customize the response:
 // src/mocks/server.js
 const handlers = [
   rest.post("https://libretranslate.de/translate", (req, res, ctx) => {
-    // Access the source property from the body of the request
-    const { source } = req.body;
+    // Access the target property from the body of the request
+    const { target } = req.body;
 
-    // Change the response based on the source
+    // Change the response based on the target
     let text;
-    if (source === "fr") {
+    if (target === "fr") {
       text = "Bonjour.";
     } else {
       text = "Holaaa.";
