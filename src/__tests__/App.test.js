@@ -36,10 +36,10 @@ test("translates the text when the form is submitted", async () => {
   // Fill out the form and submit
   userEvent.selectOptions(languageFrom, "en");
   userEvent.selectOptions(languageTo, "es");
-  userEvent.type(textFrom, "Goodbye.");
+  userEvent.type(textFrom, "Hello.");
   userEvent.click(submitButton);
 
   // Assert that the translated text appears on the page
-  const textTo = await screen.findByDisplayValue("Holaaa.");
+  const textTo = await screen.findByDisplayValue("Hola.");
   expect(textTo).toBeInTheDocument();
 });
