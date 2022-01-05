@@ -40,6 +40,28 @@ test("translates the text when the form is submitted", async () => {
   userEvent.click(submitButton);
 
   // Assert that the translated text appears on the page
-  const textTo = await screen.findByDisplayValue("Hola.");
+  const textTo = await screen.findByDisplayValue("Holaaa.");
+  expect(textTo).toBeInTheDocument();
+});
+
+test("translates from English to French", async () => {
+  render(<App />);
+
+  // Find the form input fields
+  const languageFrom = screen.getByLabelText(/^from$/i);
+  const languageTo = screen.getByLabelText(/^to$/i);
+  const textFrom = screen.getByLabelText(/text to translate/i);
+  const submitButton = screen.getByRole("button", { name: /translate/i });
+
+  // Fill out the form and submit
+  userEvent.selectOptions(languageFrom, "en");
+
+  // Select French this time!
+  userEvent.selectOptions(languageTo, "fr");
+  userEvent.type(textFrom, "Hello.");
+  userEvent.click(submitButton);
+
+  // Assert that the translated text appears on the page
+  const textTo = await screen.findByDisplayValue("Bonjour.");
   expect(textTo).toBeInTheDocument();
 });
