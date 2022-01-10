@@ -89,7 +89,7 @@ test("translates the text when the form is submitted", async () => {
 
 This test will work, and now when our component uses the `fetch` function during
 testing, our mock function will be called instead. Since the mock function has
-the same interface as `fetch` (with some crazy-looking syntax!), our component
+the same interface as `fetch` (with some wild-looking syntax!), our component
 will get the expected result back from the mock function, and our tests will
 pass. Notice that our mocked translation result is `"Holaaa"`, which lets us
 know that the real API data isn't being used.
@@ -119,7 +119,7 @@ Let's see `msw` in action and discuss how it fixes the problems with our current
 mock implementation.
 
 To start, let's put our test back to its original state, replacing the expected
-value with `"Holaaa"` so that we have a failing test:
+value with `"Holaaa."` so that we have a failing test:
 
 ```js
 test("translates the text when the form is submitted", async () => {
@@ -159,7 +159,7 @@ Next, we need to do a few things:
 ### Set Up Handlers
 
 The `msw` library works by intercepting all HTTP requests made by our
-application, so the first thing we need to do is set up "handlers" for any
+application, so the first thing we need to do is set up **handlers** for any
 specific HTTP requests we want to override in our tests.
 
 In our case, we can see from the `<App>` component that a POST request is being
@@ -202,8 +202,11 @@ To create the server, update your `mocks/server.js` file like so:
 import { rest } from "msw";
 import { setupServer } from "msw/node";
 
+// handlers is an array of request handlers
 const handlers = [
+  // rest.post will handle POST requests to the URL passed as the first argument
   rest.post("https://libretranslate.de/translate", (req, res, ctx) => {
+    // res(ctx.json()) will return a JSON response object
     return res(ctx.json({ translatedText: "Holaaa." }));
   }),
 ];
@@ -218,6 +221,7 @@ way to do this (and to ensure that our server runs for _all_ test files) is to
 update the `src/setupTests.js` file like so:
 
 ```js
+// src/setupTests.js
 import "@testing-library/jest-dom";
 import { server } from "./mocks/server";
 
@@ -253,16 +257,16 @@ that tests are passing.
 It's worth walking through what's happening at this point, now that everything
 is wired up. When we run the tests:
 
-- `msw` starts listening for network request using the handlers that we provided
-  in the `src/mocks/server.js` file
-- Our tests render the `<App>` component, and fill in the form with some data,
-  then submit the form
-- When the form is submitted, code in the `<App>` component initiates a network
-  request, which is intercepted by `msw`
-- `msw` sends a response back with the data `{ translatedText: "Holaaa." }`
-- Our `<App>` component re-renders with this new data
-- Our tests find an element with the text we're looking for: `"Holaaa."`
-- `msw` stops the server when the tests finish
+1. `msw` starts listening for network request using the handlers that we
+   provided in the `src/mocks/server.js` file
+2. Our tests render the `<App>` component, and fill in the form with some data,
+   then submit the form
+3. When the form is submitted, code in the `<App>` component initiates a network
+   request, which is intercepted by `msw`
+4. `msw` sends a response back with the data `{ translatedText: "Holaaa." }`
+5. Our `<App>` component re-renders with this new data
+6. Our tests find an element with the text we're looking for: `"Holaaa."`
+7. `msw` stops the server when the tests finish
 
 Take some time here to explore the code and experiment. There are a few moving
 pieces here, so take this opportunity to familiarize yourself with the code! Use
@@ -303,6 +307,7 @@ We can tell from the `fetch` request in the `<App>` component that the language
 option is being sent in the body of the request using the `target` property:
 
 ```js
+// src/App.js
 fetch("https://libretranslate.de/translate", {
   method: "POST",
   headers: {
