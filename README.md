@@ -91,7 +91,7 @@ This test will work, and now when our component uses the `fetch` function during
 testing, our mock function will be called instead. Since the mock function has
 the same interface as `fetch` (with some wild-looking syntax!), our component
 will get the expected result back from the mock function, and our tests will
-pass. Notice that our mocked translation result is `"Holaaa"`, which lets us
+pass. Notice that our mocked translation result is `"Holaaa."`, which lets us
 know that the real API data isn't being used.
 
 ## Mocking Network Communication
@@ -192,7 +192,7 @@ a separate handler for each one of them to this array.
 The next step is to set up a server that can use our handlers. This is a
 separate step since `msw` provides a few ways to run a server either in a Node
 environment (like we use for testing), or in a browser environment (if you
-wanted to use `mws` to intercept network requests while developing your
+wanted to use `msw` to intercept network requests while developing your
 application).
 
 To create the server, update your `mocks/server.js` file like so:
